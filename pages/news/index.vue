@@ -3,7 +3,6 @@
         <Header :title='title' />
 
 
-
         <div class="container-fluid pt-3 pb-3 bg-color">
             <div class="container">
 

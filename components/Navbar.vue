@@ -21,7 +21,7 @@
 								<a class="navbar-brand dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 										Полезное
 								</a>
-								<ul class="dropdown-menu dropdown-menu-end dropdown-menu-sm-start color">
+								<ul class="dropdown-menu color">
 										<nuxt-link to='/news' class="dropdown-item color-hover">Новости</nuxt-link>
 										<nuxt-link to='/categories' class="dropdown-item color-hover">Категории</nuxt-link>
 										<nuxt-link to='/review' class="dropdown-item color-hover">Отзывы</nuxt-link>
@@ -204,7 +204,7 @@ export default {
     },
     data(){
         return {
-            search : null,
+            search : '',
 			login: {
 				username: '',
 				password: ''

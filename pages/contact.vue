@@ -40,7 +40,7 @@
 
             <Error :error='error'/>
 
-            <div>
+            <div v-if='user' class="mb-5">
                 <form>
                     
                     <div class="form-floating mt-3">
@@ -105,6 +105,9 @@
                         <button @click.stop.prevent='sendEmail(), setErrorsOnNull()' :disabled='contactIsInvalid' type="submit" class="btn btn-primary btn-lg">Отправить</button>
                     </div>
                 </form>
+            </div>
+            <div v-else class='card-text mb-5'>
+                Зарегистрируйтесь или авторизуйтесь, чтобы отправить письмо
             </div>
 
         </div>

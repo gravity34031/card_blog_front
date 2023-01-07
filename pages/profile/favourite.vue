@@ -68,7 +68,7 @@
                             <div class="mb-2 all-tags">
                                 <button class="btn btn-link" v-for='tag in post.tags'>
                                     <nuxt-link :to='`/tags/${tag.slug}`'>
-                                        <span class="badge text-bg-success">{{ tag.name }}</span>
+                                        <span class="badge text-bg-success text-wrap">{{ tag.name }}</span>
                                     </nuxt-link>
                                 </button>
                             </div>

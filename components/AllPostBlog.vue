@@ -8,7 +8,7 @@
 
 
 				<nav class="navbar">
-					<div class="container-fluid pe-4">
+					<div class="container-fluid pe-4 d-block d-sm-flex">
 						<!-- change the grid -->
 						<!-- <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
 
@@ -30,14 +30,14 @@
                             </nuxt-link>
                         </div>
 						<nav aria-label="breadcrumb">
-							<ol class="breadcrumb mt-2">
+							<ol class="breadcrumb mt-2 d-block d-sm-flex">
 								<li class="breadcrumb-item">Сортировка</li>
 								<li v-if="sorted=='sorted=most_viewed'" class="breadcrumb-item active nav-item dropdown" aria-current="page">
 									<button class="btn btn-link nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 										Популярные
 									</button>
                                     
-									<ul class="dropdown-menu dropdown-menu-end dropdown-menu-xxl-start">
+									<ul class="dropdown-menu dropdown-menu-start dropdown-menu-sm-end">
 										<li><button @click.stop.prevent='sortPosts("new")' class="btn btn-link dropdown-item rounded-0" href="#">Новые</button></li>
 										<li><button @click.stop.prevent='sortPosts("most_liked")' class="btn btn-link dropdown-item rounded-0" href="#">Наиболее понравившееся</button></li>
 									</ul>
@@ -48,7 +48,7 @@
 										Наиболее понравившееся
 									</button>
                                     
-									<ul class="dropdown-menu dropdown-menu-end dropdown-menu-xxl-start">
+									<ul class="dropdown-menu dropdown-menu-start dropdown-menu-sm-end">
 										<li><button @click.stop.prevent='sortPosts("new")' class="btn btn-link dropdown-item rounded-0" href="#">Новые</button></li>
 										<li><button @click.stop.prevent='sortPosts("most_viewed")' class="btn btn-link dropdown-item rounded-0" href="#">Популярные</button></li>
 									</ul>
@@ -59,7 +59,7 @@
 										Новые
 									</button>
                                     
-									<ul class="dropdown-menu dropdown-menu-end dropdown-menu-xxl-start">
+									<ul class="dropdown-menu dropdown-menu-start dropdown-menu-sm-end">
 										<li><button @click.stop.prevent='sortPosts("most_viewed")' class="btn btn-link dropdown-item rounded-0" href="#">Популярные</button></li>
 										<li><button @click.stop.prevent='sortPosts("most_liked")' class="btn btn-link dropdown-item rounded-0" href="#">Наиболее понравившееся</button></li>
 									</ul>
@@ -100,7 +100,7 @@
 											<div class="mb-2 all-tags">
 												<button class="btn btn-link" v-for='tag in post.tags'>
                                                     <nuxt-link :to='`/categories/${tag.slug}`'>
-													    <span class="badge text-bg-success">{{ tag.name }}</span>
+													    <span class="badge text-bg-success text-wrap">{{ tag.name }}</span>
                                                     </nuxt-link>
 												</button>
 											</div>
