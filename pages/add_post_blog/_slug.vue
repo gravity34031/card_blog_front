@@ -1,10 +1,10 @@
 <template>
 <div>
-    <Header title='Создание работы'/>
+    <Header title='Редиктирование работы'/>
     <div class="container-fluid pt-2 pb-2 mb-2 bg-color">
     <div class='row'>
         <div class="container col-lg-5 col-12 mb-3">
-            <h3 class='text-center mb-3'>Создай работу:</h3>
+            <h3 class='text-center mb-3'>Отредактируй работу:</h3>
             <div class='card shadow-sm px-4 py-2'>
 
             <Error :error='error' />
@@ -179,7 +179,7 @@
                                     </div>
                                     
                                     <div>
-                                        <img :src='img.image' class='img-thumbnail p-0' width='200px'>
+                                        <img :src='getCompressedImage(img.image)' class='img-thumbnail p-0' width='200px'>
                                     </div>
                                     <div class='position-relative' style='right: 195px; margin-right: -15px'>
                                         <a @click='deleteImage(img)' class='text-decoration-none deleteImage p-0'>
@@ -260,7 +260,7 @@
                         <div class="carousel-inner rounded">
 
                         <div v-for='photo in checkedPhotos' :class="photo==checkedPhotos[0]?'carousel-item active':'carousel-item'">
-                            <img :src="photo.image" class="d-block w-100 post-carousel-item-img" alt="...">
+                            <img :src="getCompressedImage(photo.image)" class="d-block w-100 post-carousel-item-img" alt="...">
                         </div>
                         
                         </div>
@@ -301,7 +301,7 @@
 
                 <div class="col-xxl-4 col-xl-6 col-lg-8 col-md-8 col-sm-10 col-12 card shadow-sm h-100 mx-auto">
                     <div class="position-relative">
-                            <img v-if='checkedPhotos.length != 0' :src="checkedPhotos[0].image" class="card-img-top" alt="...">
+                            <img v-if='checkedPhotos.length != 0' :src="getCompressedImage(checkedPhotos[0].image)" class="card-img-top" alt="...">
                             <img v-else src="/img/post_img_preview.jpg" class="card-img-top" alt="...">
 
                             <div class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
@@ -490,6 +490,9 @@ export default {
         convertPostTitleToSlug(input){
             let title = input.target.value
             this.post.slug = this.generate_url(title)
+        },
+        getCompressedImage(img){
+            return img.split('.').slice(0, -1).join('.') + '_compressed.webp'
         },
         /* START ADD PHOTO */
         async addPhoto(){

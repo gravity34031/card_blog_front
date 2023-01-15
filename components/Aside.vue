@@ -43,7 +43,7 @@
                         <li v-for='post in asideBlog' v-if='post.slug!=post_blog_slug' class="list-group-item">
                             <h5 class="card-title">{{post.title}}</h5>
                             <p class="card-text">{{post.description}}</p>
-                            <img :src="`${getImages(post.images)[0].image}`" class="card-img-top aside-img rounded">
+                            <img :src="`${chooseImage(post.images)}`" class="card-img-top aside-img rounded">
                             <div class="mt-3 mx-auto d-lg-flex d-grid col-12 col-sm-9 col-md-6 col-lg-12 flex-row-reverse">
                                 <nuxt-link :to='`../blog/${post.slug}`' class="btn btn-secondary btn-sm">Перейти</nuxt-link>
                             </div>
@@ -91,6 +91,10 @@ export default{
                 }
             }
             return ''
+        },
+        chooseImage(images){
+            const image = (function(dict, key){return (dict) ? dict[key] : ''})(this.getImages(images)[0], 'image')
+            return image.split('.').slice(0, -1).join('.') + '_compressed.webp'
         },
     }
 }

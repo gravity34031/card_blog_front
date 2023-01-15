@@ -179,7 +179,7 @@
                                     </div>
                                     
                                     <div>
-                                        <img :src='img.image' class='img-thumbnail p-0' width='200px'>
+                                        <img :src='getCompressedImage(img.image)' class='img-thumbnail p-0' width='200px'>
                                     </div>
                                     <div class='position-relative' style='right: 195px; margin-right: -15px'>
                                         <a @click='deleteImage(img)' class='text-decoration-none deleteImage p-0'>
@@ -260,7 +260,7 @@
                         <div class="carousel-inner rounded">
 
                         <div v-for='photo in checkedPhotos' :class="photo==checkedPhotos[0]?'carousel-item active':'carousel-item'">
-                            <img :src="photo.image" class="d-block w-100 post-carousel-item-img" alt="...">
+                            <img :src="getCompressedImage(photo.image)" class="d-block w-100 post-carousel-item-img" alt="...">
                         </div>
                         
                         </div>
@@ -301,7 +301,7 @@
 
                 <div class="col-xxl-4 col-xl-6 col-lg-8 col-md-8 col-sm-10 col-12 card shadow-sm h-100 mx-auto">
                     <div class="position-relative">
-                            <img v-if='checkedPhotos.length != 0' :src="checkedPhotos[0].image" class="card-img-top" alt="...">
+                            <img v-if='checkedPhotos.length != 0' :src="getCompressedImage(checkedPhotos[0].image)" class="card-img-top" alt="...">
                             <img v-else src="/img/post_img_preview.jpg" class="card-img-top" alt="...">
 
                             <div class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
@@ -488,6 +488,9 @@ export default {
             let title = input.target.value
             this.post.slug = this.generate_url(title)
         },
+        getCompressedImage(img){
+            return img.split('.').slice(0, -1).join('.') + '_compressed.webp'
+        },
         /* START ADD PHOTO */
         async addPhoto(){
             if (!this.photo.image){
@@ -499,12 +502,14 @@ export default {
             formData.append('slug', this.photo.slug)
             formData.append('image', this.photo.image)
             try{
-
+                console.log(this.photo)
                 const response = await this.$axios.post(`${process.env.baseUrl}/api/photo/`, formData)
-                
+                console.log(response.data)
                 this.setErrorsPhotoOnNull()
                 this.$nuxt.refresh()
+                this.checkedPhotos = []
             }catch(err){
+                console.log(err.response.data)
                 this.errorPhoto = err.response.data
                 this.$nuxt.refresh()
             }
@@ -535,10 +540,24 @@ export default {
             /* let inputImg = document.getElementById(`input${img.id}`)
             if (inputImg.checked){
                 inputImg.click()
+            }
+            /* console.log(this.checkedPhotos)
+            console.log(img)
+            if (this.checkedPhotos.length > 0){
+                for (let i in this.checkedPhotos){
+                    console.log('---' + this.checkedPhotos.slug)
+                    if (this.checkedPhotos[i].slug == img.slug){
+                        console.log(this.checkedPhotos[i].slug)
+                        console.log(img.slug)
+                        console.log(this.checkedPhotos)
+                        this.checkedPhotos.splice(i, 1)
+                    }
+                }
             } */
             try{
                 const response = await this.$axios.delete(`${process.env.baseUrl}/api/photo/${img.slug}`)
                 this.$nuxt.refresh()
+                this.checkedPhotos = []
             } catch(err) {
                 console.log(err)
             }

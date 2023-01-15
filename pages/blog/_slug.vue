@@ -73,9 +73,8 @@
                     </div>
 
                     <div class="carousel-inner rounded">
-
                       <div v-for='photo in post.images' :class="photo==post.images[0]?'carousel-item active':'carousel-item'">
-                        <img :src="photo.image" class="d-block w-100 post-carousel-item-img" alt="...">
+                        <img :src="getCompressedImage(photo.image)" class="d-block w-100 post-carousel-item-img" alt="...">
                       </div>
                       
                     </div>
@@ -372,6 +371,9 @@ export default {
 		refreshNuxt(){ //like post
 			this.$nuxt.refresh()
 		},
+        getCompressedImage(img){
+            return img.split('.').slice(0, -1).join('.') + '_compressed.webp'
+        },
 		async addReview(){
 			if (this.user&&!this.review.first_name){
 				this.review.first_name = this.user.first_name + (this.user.first_name?' ':'') + this.user.last_name

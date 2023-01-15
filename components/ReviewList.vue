@@ -17,7 +17,7 @@
         <!-- POST -->
         <div v-if='review.product'>
             <div class="col-12 col-sm-9 col-md-6 col-lg-5 col-xl-4 col-xxl-3">
-                <img :src="(function(dict, key){return (dict) ? dict[key] : ''})(getImages(review.product.images)[0], 'image')" class="card-img-top review-img rounded">
+                <img :src="chooseImage(review.product.images)" class="card-img-top review-img rounded">
             </div>
 
 
@@ -158,6 +158,10 @@ export default {
 			}
 			return ''
 		},
+        chooseImage(images){
+            const image = (function(dict, key){return (dict) ? dict[key] : ''})(this.getImages(images)[0], 'image')
+            return image.split('.').slice(0, -1).join('.') + '_compressed.webp'
+        },
         sliceComment(text){
             let textArray = []
             textArray[0] = text.slice(0, 300)

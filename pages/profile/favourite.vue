@@ -42,7 +42,7 @@
                     <div class="card shadow-sm h-100 ">
 
                         <div class="position-relative">
-                                <img :src="(function(dict, key){return (dict) ? dict[key] : ''})(getImages(post.images)[0], 'image')" class="card-img-top" alt="...">
+                                <img :src="chooseImage(post.images)" class="card-img-top" alt="...">
                                 <button v-if='!(post.favourite.some(e => e.username == (user ? user.username : "")))' @click.prevent='likePost({post_slug: post.slug, refreshNuxt: refreshNuxt})' class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
                                     <nuxt-picture src="/img/icons/like-disabled.png" width="30" height="30" class="position-relative like" z-index="-1" />
                                 </button>
@@ -139,6 +139,10 @@ export default {
 			}
 			return ''
 		},
+        chooseImage(images){
+            const image = (function(dict, key){return (dict) ? dict[key] : ''})(this.getImages(images)[0], 'image')
+            return image.split('.').slice(0, -1).join('.') + '_compressed.webp'
+        },
     },
     computed: {
 		...mapState(['postIsLiked']), //like post

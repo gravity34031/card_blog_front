@@ -1,10 +1,10 @@
 <template>
 <div>
-    <Header title='Создание новости'/>
+    <Header title='Редактирование новости'/>
     <div class="container-fluid pt-2 pb-2 mb-2 bg-color">
     <div class='row'>
         <div class="container col-lg-5 col-12 mb-3">
-            <h3 class='text-center mb-3'>Создай новость:</h3>
+            <h3 class='text-center mb-3'>Отредактируй новость:</h3>
             <div class='card shadow-sm px-4 py-2'>
 
             <Error :error='error' />
