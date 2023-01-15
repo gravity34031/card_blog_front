@@ -53,10 +53,10 @@
 										<div class="position-relative">
 												<img :src="(function(dict, key){return (dict) ? dict[key] : ''})(getImages(post.images)[0], 'image')" class="card-img-top" alt="...">
 												<button v-if='!(post.favourite.some(e => e.username == (user ? user.username : "")))' @click.prevent='likePost({post_slug: post.slug, refreshNuxt: refreshNuxt})' class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
-													<img src="/img/icons/like-disabled.png" width="30" height="30" class="position-relative like" z-index="-1">
+													<nuxt-picture src="/img/icons/like-disabled.png" width="30" height="30" class="position-relative like" z-index="-1" />
 												</button>
 												<button v-else @click.prevent='likePost({post_slug: post.slug, refreshNuxt: refreshNuxt})' class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
-													<img src="/img/icons/like.png" width="30" height="30" class="position-relative like" z-index="-1">
+													<nuxt-picture src="/img/icons/like.png" width="30" height="30" class="position-relative like" z-index="-1" />
 												</button>
 										</div>
 										<div class="card-body d-flex flex-column justify-content-between">

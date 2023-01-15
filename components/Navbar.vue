@@ -5,10 +5,10 @@
 
 				<div class="d-flex flex-row align-items-center">
 						<a class="me-2 navbar-brand" :href='instagram.link' target="_blank">
-                            <img src="/img/icons/instagram.png" width="30" height="30" alt="Инстаграм" title="Моя страница в инстаграм">
+                            <img src="/img/icons/instagram.png" width="30" height="30" alt="Инстаграм" title="Моя страница в инстаграм" />
                         </a>
 						<a class="me-2 navbar-brand" :href='telegram.link' target="_blank">
-                            <img src="/img/icons/telegram.png" width="30" height="30" alt="Телеграм" title="Моя страница в телеграм">
+                            <img src="/img/icons/telegram.png" width="30" height="30" alt="Телеграм" title="Моя страница в телеграм" />
                         </a>
 						<nuxt-link to='/' class="navbar-brand" aria-current="page">Главная</nuxt-link>
 				</div>

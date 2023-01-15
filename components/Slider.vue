@@ -9,21 +9,21 @@
 		<div class="carousel-inner">
 
 			<div class="carousel-item active">
-				<img src="/img/slider/1.jpg" class="d-block w-100 carousel-item-img" alt="...">
+				<img src="/img/slider/1.webp" class="d-block w-100 carousel-item-img" alt="..." />
 				<div class="carousel-caption d-none d-md-block">
 					<h5>Первый слайд</h5>
 					<p>На данном фото изображено фото стола, макбука, объектив камеры.</p>
 				</div>
 			</div>
 			<div class="carousel-item">
-				<img src="/img/slider/2.jpeg" class="d-block w-100 carousel-item-img" alt="...">
+				<img src="/img/slider/2.webp" class="d-block w-100 carousel-item-img" alt="..." />
 				<div class="carousel-caption d-none d-md-block ">
 					<h5>Второй слайд</h5>
 					<p>Уютный уголок с кактусом, кофе и фильмом.</p>
 				</div>
 			</div>
 			<div class="carousel-item">
-				<img src="/img/slider/3.jpg" class="d-block w-100 carousel-item-img" alt="...">
+				<img src="/img/slider/3.webp" class="d-block w-100 carousel-item-img" alt="..." />
 				<div class="carousel-caption d-none d-md-block">
 					<h5>Третий слайд</h5>
 					<p>Просто немного яблок. Ничего более.</p>

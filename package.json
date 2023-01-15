@@ -24,6 +24,7 @@
     "vuelidate": "^0.7.7"
   },
   "devDependencies": {
+    "@nuxt/image": "^0.7.1",
     "chromedriver": "^106.0.1",
     "nightwatch": "^2.3.9"
   }

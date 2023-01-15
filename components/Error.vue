@@ -27,7 +27,11 @@ export default{
     methods:{
         beautifyError(errors){
             if(typeof errors === 'string'){
-                this.errorsOutput = [errors]
+                if (errors.length > 200){
+                    this.errorsOutput = ['Неизвестная ошибка']
+                } else{
+                    this.errorsOutput = [errors]
+                }
             } else if (typeof errors ==='object') {
                 let errorsOutput = []
                 for (let e in errors) {
