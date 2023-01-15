@@ -48,6 +48,10 @@
                                 <nuxt-link :to='`../blog/${post.slug}`' class="btn btn-secondary btn-sm">Перейти</nuxt-link>
                             </div>
                         </li>
+                        <div v-if='asideBlog.length < 1' class="d-flex justify-content-center my-3">
+                            <div class="spinner-border text-primary" role="status">
+                            </div>
+                        </div>
                     </ul>
                 </div>
 
@@ -62,6 +66,10 @@
                                 <nuxt-link :to='`../news/${post.slug}`' class="btn btn-light btn-sm">Перейти</nuxt-link>
                             </div>
                         </li>
+                        <div v-if='asideNews.length < 1' class="d-flex justify-content-center my-3">
+                            <div class="spinner-border text-primary" role="status">
+                            </div>
+                        </div>
                     </ul>
                 </div>
 
