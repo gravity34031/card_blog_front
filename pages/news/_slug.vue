@@ -64,7 +64,7 @@
 
 
                 <div class="detail-news">
-                    <img :src="post.image" class="news-img">
+                    <img v-show='imgIsLoaded' @load='checkImgIsLoaded()' :src="post.image" class="news-img" alt='...'>
                     <hr v-if='post.image'>      
                     <span v-html='post.content'></span>
                     <hr>
@@ -102,6 +102,7 @@ export default{
     data(){
       return {
 		news_blog_slug: null,
+        imgIsLoaded: false
       }
     },
     async asyncData({params}){
@@ -128,6 +129,9 @@ export default{
 		this.getAside()
 	},
     methods:{
+        checkImgIsLoaded(){
+            this.imgIsLoaded = true
+        },
         ...mapActions(['getAside']),
         async deletePost(){
             try{
