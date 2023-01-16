@@ -75,7 +75,7 @@
 						</nuxt-link>
 					</li>
 					</div>
-					<button id='showMoreTagsOnFooter' @click='showMoreTags()' class="btn btn-sm">
+					<button v-if='tags[1].length > 0' id='showMoreTagsOnFooter' @click='showMoreTags()' class="btn btn-sm">
                         Показать все
                     </button>
 					<div id='secondPartOfTagsOnFooter' class='d-none'>
@@ -85,7 +85,7 @@
 						</nuxt-link>
 					</li>
 					</div>
-					<button id='hideMoreTagsOnFooter' @click='hideMoreTags()' class="btn btn-sm d-none">
+					<button v-if='tags[1].length > 0' id='hideMoreTagsOnFooter' @click='hideMoreTags()' class="btn btn-sm d-none">
                         Скрыть лишнее
                     </button>
 				</ul>

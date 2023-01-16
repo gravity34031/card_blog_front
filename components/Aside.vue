@@ -18,10 +18,9 @@
                             </div>
                         </div>
                         
-                        <button id='showMoreTags' @click='showMoreTags()' class="btn btn-light w-100">
+                        <button v-if='tags[1].length > 0' id='showMoreTags' @click='showMoreTags()' class="btn btn-light w-100">
                             Показать все
                         </button>
-                        
                         <div class="row row-cols-1 row-cols-sm-3 row-cols-lg-2 g-2 d-none" id='secondPartOfTags'>
                             <div v-for='tag in tags[1]' class="col">
                                 <div class="card border-0 h-100">

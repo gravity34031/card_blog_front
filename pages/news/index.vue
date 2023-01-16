@@ -14,7 +14,7 @@
                 </div>
 
 
-                <div v-if='posts' class="container-fluid">
+                <div v-if='posts.length > 0' class="container-fluid">
                     <div class="card px-2 py-3">
                         <ul v-for='post in posts' class="list-group list-group-flush">
                             <li class="list-group-item">
