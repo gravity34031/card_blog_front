@@ -5,7 +5,7 @@
         <div class="card-body">
             <form v-if='user' @submit.prevent='addComment()'>
                 <div class="mb-3 form-floating">
-                    <textarea v-model='new_comment' @change='$v.new_comment.$touch()' :class="'form-control' + ($v.new_comment.$invalid&&$v.new_comment.$dirty?' is-invalid':' ')" id="exampleFormControlTextarea1" style="height: 100px" placeholder="Оставьте комментарий"></textarea>
+                    <textarea v-model='new_comment' @change='$v.new_comment.$touch()' :class="'form-control' + ($v.new_comment.$invalid&&$v.new_comment.$dirty?' is-invalid':' ')" id="exampleFormControlTextarea1" style='height:100px' placeholder="Оставьте комментарий"></textarea>
                     <label for="exampleFormControlTextarea1" class="form-label">Оставьте свой комментарий</label>
                     <div class='invalid-feedback'>
                         <span v-if='!$v.new_comment.required'>
@@ -42,7 +42,7 @@
             </span>
             <!-- EDITCOMMENT -->
             <div :id='`editCommentForm${comment.id}`' class='d-none'>
-                <textarea :value='comment.content' :id='`editInput${comment.id}`' class="form-control" rows='3'></textarea>
+                <textarea :value='comment.content' :id='`editInput${comment.id}`' class="form-control"></textarea>
                 <div class='text-end mb-1'>
                     <button @click.stop.prevent='editCommentBack(comment.id)' class="btn btn-sm btn-primary mt-2">Сохранить</button>
                 </div>
@@ -135,6 +135,7 @@ export default {
             }
         },
         async editComment(commentId){
+            const textarea = document.getElementById(`editInput${commentId}`)
             let editCommentForm = document.getElementById(`editCommentForm${commentId}`)
             let commentContent = document.getElementById(`commentContent${commentId}`)
             if (commentContent.classList.value.includes('d-none')){
@@ -144,6 +145,7 @@ export default {
                 editCommentForm.classList.remove('d-none')
                 commentContent.classList.add('d-none')
             }
+            textarea.dispatchEvent(new Event('input'));
         },
         async editCommentBack(commentId){
             try{
@@ -202,6 +204,18 @@ export default {
             const commentId = button.getAttribute('data-bs-commentId')
             this.commentId = commentId
         })
+
+        // auto textarea
+        const tx = document.getElementsByTagName("textarea");
+        for (let i = 0; i < tx.length; i++) {
+            tx[i].setAttribute("style", "height:" + Math.max(100, (tx[i].scrollHeight)) + "px;overflow-y:hidden;");
+            tx[i].addEventListener("input", OnInput, false);
+        }
+
+        function OnInput() {
+            this.style.height = 0;
+            this.style.height = Math.max(100, (this.scrollHeight)) + "px";
+        }
     },
     computed: {
         ...mapState(['validationMessages']),

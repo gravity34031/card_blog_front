@@ -129,7 +129,7 @@
 
 
                         <div class="row mt-3 mx-0 form-floating">
-                            <textarea v-model='review.comment' @change='$v.review.comment.$touch()' :class="'form-control' + ($v.review.comment.$invalid&&$v.review.comment.$dirty?' is-invalid':' ')" id="reviewComment" style="height:100px" placeholder="Оставьте отзыв"></textarea>
+                            <textarea v-model='review.comment' @change='$v.review.comment.$touch()' :class="'form-control' + ($v.review.comment.$invalid&&$v.review.comment.$dirty?' is-invalid':' ')" style='height:100px' id="reviewComment" placeholder="Оставьте отзыв"></textarea>
                             <label for="reviewComment" class="form-label">Комментарий к отзыву</label>
                             <div class='invalid-feedback'>
                                 <span v-if='!$v.review.comment.required'>
@@ -307,6 +307,19 @@ export default {
 		    this.review.email = this.user.email
 		}
 	},
+    mounted(){
+        // auto textarea
+        const tx = document.getElementsByTagName("textarea");
+        for (let i = 0; i < tx.length; i++) {
+            tx[i].setAttribute("style", "height:" + Math.max(100, (tx[i].scrollHeight)) + "px;overflow-y:hidden;");
+            tx[i].addEventListener("input", OnInput, false);
+        }
+
+        function OnInput() {
+            this.style.height = 0;
+            this.style.height = Math.max(100, (this.scrollHeight)) + "px";
+        }
+    },
     validations: {
         selectedProduct: {
             required
