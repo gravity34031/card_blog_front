@@ -42,13 +42,10 @@
                     <div class="card shadow-sm h-100 ">
 
                         <div class="position-relative">
+                                <button @click.prevent='likePost({post: post, user: user, refreshNuxt})' class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
+                                    <img :id='`like${post.slug}`' :src='postIsLiked(post) ? likeImg : likeDisabledImg' width="30" height="30" class="position-relative like" z-index="-1" />
+                                </button>
                                 <img :src="chooseImage(post.images)" class="card-img-top" alt="...">
-                                <button v-if='!(post.favourite.some(e => e.username == (user ? user.username : "")))' @click.prevent='likePost({post_slug: post.slug, refreshNuxt: refreshNuxt})' class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
-                                    <nuxt-picture src="/img/icons/like-disabled.png" width="30" height="30" class="position-relative like" z-index="-1" />
-                                </button>
-                                <button v-else @click.prevent='likePost({post_slug: post.slug, refreshNuxt: refreshNuxt})' class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
-                                    <nuxt-picture src="/img/icons/like.png" width="30" height="30" class="position-relative like" z-index="-1" />
-                                </button>
                         </div>
 
                         <div class="card-body d-flex flex-column justify-content-between">
@@ -121,10 +118,19 @@ export default {
 
     },
     methods:{
-        ...mapActions(['likePost', 'isPostLiked']), //like post
+        ...mapActions(['likePost']), //like post
         refreshNuxt(){ //like post
 			this.$nuxt.refresh()
 		},
+        postIsLiked(post){
+            let flag = false
+            for (let user of post.favourite){
+                if ((this.user ? this.user.username: '') == user.username){
+                    flag = true
+                }
+            }
+            return flag
+        },
         transformTime(time){
 			let userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
 			let date = new Date(time)
@@ -145,7 +151,7 @@ export default {
         },
     },
     computed: {
-		...mapState(['postIsLiked']), //like post
+		...mapState(['likeImg', 'likeDisabledImg']), //like post
 		loggedIn(){
 			return this.$auth.loggedIn
 		},

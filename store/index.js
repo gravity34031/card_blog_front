@@ -1,5 +1,7 @@
 export const state = () => ({
-    postIsLiked: false,
+    likeImg : '/img/icons/like.png',
+    likeDisabledImg : '/img/icons/like-disabled.png',
+
     tags: '',
     asideBlog: [],
     asideNews: [],
@@ -48,9 +50,6 @@ export const getters = {
 
 export const mutations = {
     /* LIKE */
-    CHANGE_POST_IS_LIKED(state, liked){
-        state.postIsLiked = liked
-    },
 
     /* ASIDE */
     UPDATE_TAGS(state, tags){
@@ -67,46 +66,60 @@ export const mutations = {
 
 
 export const actions = {
-    /* LIKE */
     async likePost({commit, dispatch, state}, data){
-        let refreshNuxt = data.refreshNuxt
-        let post_slug = data.post_slug
-        let post = await this.$axios.get(`${process.env.baseUrl}/api/blog_posts/${post_slug}`)
-        post = post.data
+        if (!data.user){
+            return undefined
+        }
+        const currentUser = data.user
+        const post = data.post
+        const post_slug = data.post.slug
+        const likeImg = document.getElementById(`like${post_slug}`)
+        if (likeImg.src.split('/').slice(-1)[0] == state.likeDisabledImg.split('/')[3]){
+            likeImg.src = state.likeImg
+        } else {
+            likeImg.src = state.likeDisabledImg
+        }
+        const axios = this.$axios
+        const dataBack = {'slug': post_slug}
 
-        try {
-            dispatch('isPostLiked', post)
-            let data = {'slug': post.slug};
-            if (state.postIsLiked){
-                const response = await this.$axios.delete(`${process.env.baseUrl}/api/favourite/`, {data});
-                commit('CHANGE_POST_IS_LIKED', false)
-                //console.log(response)
-                await refreshNuxt()
+        async function like(){
+            let postIsLiked = false
+            for (let u of post.favourite){
+                if (currentUser.username == u.username){
+                    postIsLiked = true
+                }
             }
-            else {
-                const response = await this.$axios.post(`${process.env.baseUrl}/api/favourite/`, data);
-                commit('CHANGE_POST_IS_LIKED', true)
-                //console.log(response)
-                await refreshNuxt()
-            }  
-        }
-        catch(err){
-            console.log(err)
-        }
-    },
-    isPostLiked({commit}, post){
 
-        const favourite = post.favourite;
-        const username = this.$auth.user.username
-        let liked = false;
-        for (let i of favourite){
-            if (username == i.username){
-                liked = true;
+            if (postIsLiked && likeImg.src.split('/').slice(-1)[0] == state.likeDisabledImg.split('/')[3]){
+                // dislike
+                try {
+                    const response = await axios.delete(`${process.env.baseUrl}/api/favourite/`, {'data': dataBack});
+                    console.log(response)
+                } catch (err) {
+                    console.log(err.response)
+                }
+                data.refreshNuxt()
+                likeImg.removeAttribute('touched')
+                return undefined
+            } else if (!postIsLiked && likeImg.src.split('/').slice(-1)[0] != state.likeImg.split('/')[2]){
+                // like
+                try {
+                    const response = await axios.post(`${process.env.baseUrl}/api/favourite/`, dataBack);
+                    console.log(response)
+                } catch(err) {
+                    console.log(err.response)
+                }
+                data.refreshNuxt()
+                likeImg.removeAttribute('touched')
+                return undefined
             }
+            setTimeout(like, 1000)
+        }
+        if (!likeImg.getAttribute('touched')){
+            like()
         }
 
-        commit('CHANGE_POST_IS_LIKED', liked)
-        return liked
+        likeImg.setAttribute('touched', true)
     },
 
 

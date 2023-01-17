@@ -74,13 +74,11 @@
 						<div class="col" v-for='post in posts' :key='post.id'>
 								<div class="card shadow-sm h-100 ">
 										<div class="position-relative">
+                                                
+                                                <button @click.prevent='likePost({post: post, user: user, refreshNuxt})' class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
+													<img :id='`like${post.slug}`' :src='postIsLiked(post) ? likeImg : likeDisabledImg' width="30" height="30" class="position-relative like" z-index="-1" />
+												</button>
 												<img :src="chooseImage(post.images)" class="card-img-top" alt="..." />
-												<button v-if='!(post.favourite.some(e => e.username == (user ? user.username : "")))' @click.prevent='likePost({post_slug: post.slug, refreshNuxt: refreshNuxt})' class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
-													<img src="/img/icons/like-disabled.png" width="30" height="30" class="position-relative like" z-index="-1" />
-												</button>
-												<button v-else @click.prevent='likePost({post_slug: post.slug, refreshNuxt: refreshNuxt})' class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
-													<img src="/img/icons/like.png" width="30" height="30" class="position-relative like" z-index="-1" />
-												</button>
 										</div>
 										<div class="card-body d-flex flex-column justify-content-between">
 											
@@ -161,30 +159,19 @@ export default{
 		'page_path'
 	],
 	methods: {
-		...mapActions(['likePost', 'isPostLiked']), //like post
+		...mapActions(['likePost']), //like post
+        postIsLiked(post){
+            let flag = false
+            for (let user of post.favourite){
+                if ((this.user ? this.user.username: '') == user.username){
+                    flag = true
+                }
+            }
+            return flag
+        },
 		refreshNuxt(){ //like post
 			this.$nuxt.refresh()
 		},
-		/* test(favourite){
-			let names = ''
-			for (let name of favourite){
-				names = names + name.username + ' '
-			}
-			return names
-		}, */
-		/* isPostLiked(post){
-			const favourite = post.favourite;
-			const username = this.$auth.user.username
-			let liked = false;
-			for (let i of favourite){
-				if (username == i.username){
-					liked = true;
-				}
-			}
-			this.$nuxt.refresh()
-			console.log(liked)
-			return liked
-		}, */
 		getImages(gallery_slug){
 			for (let i of this.galleries){
 				if(i.slug == gallery_slug){
@@ -202,36 +189,13 @@ export default{
 			let date = new Date(time)
 			let datePlusUTC = date.toLocaleString('ru-RU', { timeZone: userTimezone })
 			return datePlusUTC.substr(0, datePlusUTC.length - 3)
-			//let dateWithoutYear =  datePlusUTC.substr(0, 5) + datePlusUTC.substr(10)
-			//return dateWithoutYear.substr(0, dateWithoutYear.length - 3)
-			/* let timeForMoment = date.getFullYear() + '-' + date.getMonth() + '-' + date.getUTCDate()
-			+ ' ' + date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds()
-			let hourMinSec = date.getUTCHours() + ':' + date.getUTCMinutes() + ':' + date.getUTCSeconds()
-			let fullTime = this.$moment('2020-01-01 00:00:01').tz(userTimezone)
-			let resultDate = String(fullTime).split(' ')[4] */
 		},
 		sortPosts(query){
 			this.$router.push(`${this.page_path}?` + `sorted=${query}` + this.page + this.page_size)
 		}
-        /* sortPopular(){
-            this.$router.push(`${this.page_path}?` + 'sorted=most_viewed' + this.page + this.page_size)
-        },
-        sortMostLiked(){
-            this.$router.push(`${this.page_path}?` + 'sorted=most_liked' + this.page + this.page_size)
-        },
-        sortNew(){
-            this.$router.push(`${this.page_path}?` + 'sorted=new' + this.page + this.page_size)
-        }, */
-		/* async test(){
-			function sleep(ms) {
-    			return new Promise(resolve => setTimeout(resolve, ms));
-			}
-			await sleep(500)
-			this.$nuxt.refresh()
-		}, */
     },
 	computed: {
-		...mapState(['postIsLiked']), //like post
+		...mapState(['likeImg', 'likeDisabledImg']), //like post
 		loggedIn(){
 			return this.$auth.loggedIn
 		},
@@ -248,41 +212,3 @@ export default{
 <style>
 
 </style>
-
-
-
-
-<!-- async likePost(post, post_slug){
-			this.liked = this.is_liked(post)
-			//console.log(this.is_liked(post))
-			for(let favourite of post.favourite){
-				if (favourite.username == this.$auth.user.username){
-					this.liked = true
-				}
-			}
-			try {
-				let data = {'slug': post_slug};
-				if (!this.liked){
-					let response = await this.$axios.post(`${process.env.baseUrl}/api/favourite/`, data);
-					this.liked = true;
-				} else {
-					let response = await this.$axios.delete(`${process.env.baseUrl}/api/favourite/`, {data});
-					this.liked = false;
-				}
-				//console.log(response)
-				await this.$nuxt.refresh()
-			}
-			catch(err){
-				this.liked = false;
-			}
-        },
-		is_liked(post){
-			let users = []
-			for(let i of post.favourite){
-				users.push(i.username)
-			}
-			if (this.$auth.user){
-				return users.includes(this.$auth.user.username)
-			}
-			return false
-		}, -->

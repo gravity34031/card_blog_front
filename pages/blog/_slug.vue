@@ -285,13 +285,15 @@
 							<i class="fa-solid fa-eye"></i>
 							<span class=''>{{post.views}}</span>
 						</div>
-
-						<button v-if='!(post.favourite.some(e => e.username == (user ? user.username : "")))' @click.prevent='likePost({post_slug: post.slug, refreshNuxt: refreshNuxt})' class="btn btn-link p-0" data-bs-toggle="button">
+                        <button @click.prevent='likePost({post: post, user: user, refreshNuxt})' class="btn btn-link p-0" data-bs-toggle="button">
+                            <img :id='`like${post.slug}`' :src='postIsLiked() ? likeImg : likeDisabledImg' width="30" height="30" class=" like" z-index="-1" >
+                        </button>
+						<!-- <button v-if='!(post.favourite.some(e => e.username == (user ? user.username : "")))' @click.prevent='likePost({post_slug: post.slug, refreshNuxt: refreshNuxt})' class="btn btn-link p-0" data-bs-toggle="button">
 							<img src="/img/icons/like-disabled.png" width="30" height="30" class=" like" z-index="-1">
 						</button>
 						<button v-else @click.prevent='likePost({post_slug: post.slug, refreshNuxt: refreshNuxt})' class="btn btn-link p-0" data-bs-toggle="button">
 							<img src="/img/icons/like.png" width="30" height="30" class=" like" z-index="-1">
-						</button>
+						</button> -->
 
 						<span class='ms-0'>{{post.favourite.length}}</span>
 					</div>
@@ -358,6 +360,7 @@ export default {
             slug: post_blog_slug,
             post: 'blog'
         })
+
 		//console.log(comments.data)
         return {
             post: post.data,
@@ -367,7 +370,16 @@ export default {
         }
     },
     methods:{
-        ...mapActions(['likePost', 'isPostLiked', 'getAside']), //like post
+        ...mapActions(['likePost', 'getAside']), //like post
+        postIsLiked(){
+            let flag = false
+            for (let user of this.post.favourite){
+                if ((this.user ? this.user.username: '') == user.username){
+                    flag = true
+                }
+            }
+            return flag
+        },
 		refreshNuxt(){ //like post
 			this.$nuxt.refresh()
 		},
@@ -431,7 +443,7 @@ export default {
         }
     },
     computed:{
-        ...mapState(['postIsLiked', 'validationMessages']), //like post
+        ...mapState(['likeImg', 'likeDisabledImg', 'validationMessages']), //like post
         user(){
 			return this.$auth.user
 		},
