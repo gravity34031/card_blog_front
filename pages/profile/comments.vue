@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            <div v-if='comments.length > 0'>
+            <div v-if='comments && comments.length > 0'>
                 <div v-for='i of comments.keys()'>
                     <!-- postBlogHeader -->
                     <div v-if='commentsWithPostBlogOnly.length > 0'>

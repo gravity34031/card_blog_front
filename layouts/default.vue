@@ -2,8 +2,10 @@
 <div>
     <div class='d-flex flex-column justify-content-between body_div'>
         <div>
+        <client-only>
             <Navbar />
             <Nuxt />
+        </client-only>
         </div>
     <Footer />
     </div>

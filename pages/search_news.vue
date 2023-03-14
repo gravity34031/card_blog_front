@@ -47,7 +47,7 @@
                 <p class="lead mb-0">Найдено записей: {{count}}</p>
 
                 <!-- POSTS -->
-                <div v-if='posts.length > 0' class="container-fluid mb-2">
+                <div v-if='posts && posts.length > 0' class="container-fluid mb-2">
                     <div class="card px-2 py-3">
                         <ul v-for='post in posts' class="list-group list-group-flush">
                             <li class="list-group-item">

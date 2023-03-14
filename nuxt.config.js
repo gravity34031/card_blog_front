@@ -42,6 +42,9 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
+    '@nuxt/image',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -49,9 +52,9 @@ export default {
     // https://go.nuxtjs.dev/bootstrap
     //'bootstrap-vue/nuxt',
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
-    '@nuxtjs/auth-next',
-    '@nuxt/image',
+    //'@nuxtjs/axios',
+    //'@nuxtjs/auth-next',
+    //'@nuxt/image',
   ],
 
   auth: {
@@ -97,13 +100,6 @@ export default {
   build: {
   },
 
-  buildModules: [
-    // Simple usage
-    '@nuxtjs/moment',
-
-    // With options
-    ['@nuxtjs/moment', { /* module options */ }]
-  ],
 
   moment: {
     timezone: true

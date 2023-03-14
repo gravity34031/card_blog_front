@@ -68,7 +68,7 @@
                       <button class="active" type="button" data-bs-target="#carouselPostBlog"></button>
                       <button v-for='i in post.images' type="button" data-bs-target="#carouselPostBlog"></button>
                     </div> -->
-                    <div v-if='post.images.length > 1' class="carousel-indicators">
+                    <div v-if='post.images && post.images.length > 1' class="carousel-indicators">
                       <button v-for='i in post.images' type="button" data-bs-target="#carouselPostBlog" :data-bs-slide-to="`${post.images.indexOf(i)}`" :class="`${post.images.indexOf(i)==0?'active':''}`"></button>
                     </div>
 
@@ -78,11 +78,11 @@
                       </div>
                       
                     </div>
-                    <button v-if='post.images.length > 1' class="carousel-control-prev" type="button" data-bs-target="#carouselPostBlog" data-bs-slide="prev">
+                    <button v-if='post.images && post.images.length > 1' class="carousel-control-prev" type="button" data-bs-target="#carouselPostBlog" data-bs-slide="prev">
                       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                       <span class="visually-hidden">Previous</span>
                     </button>
-                    <button v-if='post.images.length > 1' class="carousel-control-next" type="button" data-bs-target="#carouselPostBlog" data-bs-slide="next">
+                    <button v-if='post.images && post.images.length > 1' class="carousel-control-next" type="button" data-bs-target="#carouselPostBlog" data-bs-slide="next">
                       <span class="carousel-control-next-icon" aria-hidden="true"></span>
                       <span class="visually-hidden">Next</span>
                     </button>

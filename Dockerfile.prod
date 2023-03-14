@@ -1,0 +1,24 @@
+FROM node:16.18.0 as build
+
+#RUN groupadd app
+#RUN useradd -m -g app admin -p 4686
+#RUN usermod -aG app admin
+
+
+WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
+COPY package.json ./
+RUN npm install --silent
+RUN npm install -g @vue/cli
+
+COPY . .
+
+#RUN chown -R admin:app /app
+
+RUN npm run build
+
+
+
+#USER admin
+
+ENV HOST=0.0.0.0

@@ -48,7 +48,7 @@
                         <h1 class="modal-title fs-5" id="deleteTagsModalLabel">Удаление тегов</h1>
                         <button id='closeDeleteTagsModal' type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div v-if='checkedTags.length > 0' class="modal-body">
+                    <div v-if='checkedTags && checkedTags.length > 0' class="modal-body">
                         <p class='mb-0'>Вы уверены, что хотите удалить следующие теги?</p>
                         <div class="mb-2 all-tags">
                             <button class="btn btn-link" v-for='tag in checkedTags'>
@@ -60,7 +60,7 @@
                     <div v-else class="modal-body">
                         <p class='mb-0'>Вы не выбрали ни одного тега</p>
                     </div>
-                    <div v-if='checkedTags.length > 0' class="modal-footer">
+                    <div v-if='checkedTags && checkedTags.length > 0' class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
                         <button @click.stop.prevent='deleteTags()' type="button" class="btn btn-danger">Удалить</button>
                     </div>

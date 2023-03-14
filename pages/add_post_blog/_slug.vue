@@ -1,6 +1,6 @@
 <template>
 <div>
-    <Header title='Редиктирование работы'/>
+    <Header title='Редактирование работы'/>
     <div class="container-fluid pt-2 pb-2 mb-2 bg-color">
     <div class='row'>
         <div class="container col-lg-5 col-12 mb-3">

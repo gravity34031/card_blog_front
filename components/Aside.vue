@@ -18,7 +18,7 @@
                             </div>
                         </div>
                         
-                        <button v-if='tags[1].length > 0' id='showMoreTags' @click='showMoreTags()' class="btn btn-light w-100">
+                        <button v-if='tags[1] && tags[1].length > 0' id='showMoreTags' @click='showMoreTags()' class="btn btn-light w-100">
                             Показать все
                         </button>
                         <div class="row row-cols-1 row-cols-sm-3 row-cols-lg-2 g-2 d-none" id='secondPartOfTags'>
@@ -47,7 +47,7 @@
                                 <nuxt-link :to='`../blog/${post.slug}`' class="btn btn-secondary btn-sm">Перейти</nuxt-link>
                             </div>
                         </li>
-                        <div v-if='asideBlog.length < 1' class="d-flex justify-content-center my-3">
+                        <div v-if='asideBlog && asideBlog.length < 1' class="d-flex justify-content-center my-3">
                             <div class="spinner-border text-primary" role="status">
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                                 <nuxt-link :to='`../news/${post.slug}`' class="btn btn-light btn-sm">Перейти</nuxt-link>
                             </div>
                         </li>
-                        <div v-if='asideNews.length < 1' class="d-flex justify-content-center my-3">
+                        <div v-if='asideNews && asideNews.length < 1' class="d-flex justify-content-center my-3">
                             <div class="spinner-border text-primary" role="status">
                             </div>
                         </div>

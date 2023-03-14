@@ -93,7 +93,7 @@
                 </div>
         
                 <!-- PAGINATION -->
-                <nav v-if='posts.length > 0' class='mt-4' aria-label="Page navigation">
+                <nav v-if='posts && posts.length > 0' class='mt-4' aria-label="Page navigation">
 					<ul class="pagination d-flex flex-wrap justify-content-center">
 						<li :class='previous.includes("page=")?"page-item":"page-item disabled"'>
 							<nuxt-link :to='`${page_url}${query_params.replace("page="+current_page, "page=1")}`' class="page-link" href="#" aria-label="Previous">

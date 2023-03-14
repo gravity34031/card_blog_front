@@ -61,7 +61,7 @@
                                     <!-- <button @click.stop.prevent='searchProductForReview()' class="btn btn-sm btn-outline-success" type="submit">Поиск</button> -->
                                 </div>
                             </form>
-                            <select v-model='selectedProduct' v-if='products.length > 0' class="mt-2 form-select form-select-sm" aria-label="Default select example">
+                            <select v-model='selectedProduct' v-if='products && products.length > 0' class="mt-2 form-select form-select-sm" aria-label="Default select example">
                                 <option v-for='post in products' :value='post.slug'>
                                     <span>{{post.title}} - код: {{post.id}}</span>
                                 </option>
@@ -220,14 +220,15 @@ export default {
             error: null
         }
     },
-    async asyncData(ctx){
-        const reviews = await axios.get(`${process.env.baseUrl}/api/review`)
-        const photosForReviewList = await axios.get(`${process.env.baseUrl}/api/gallery/`)
+    async fetch(){
+        const reviews = await this.$axios.get(`${process.env.baseUrl}/api/review`)
+        const photosForReviewList = await this.$axios.get(`${process.env.baseUrl}/api/gallery/`)
 
         return {
             reviews: reviews.data,
             photosForReviewList: photosForReviewList.data
         }
+
     },
     methods:{
         async addReview(){

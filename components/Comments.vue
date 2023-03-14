@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    <div v-if='comments.length' class="mt-4 border rounded-4 bg-white px-3 py-2">
+    <div v-if='comments && comments.length' class="mt-4 border rounded-4 bg-white px-3 py-2">
         <div v-for='comment in comments' :key='comment.id' class='text-wrap text-break comment-hover'>
             <div class='mb-2 d-flex align-items-center'>
                 <img :src="`${back_path}${comment.author.avatar}`" class="me-3 border rounded-circle d-sm-block" height="45px" width="45px" alt="Аватар">
