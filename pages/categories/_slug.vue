@@ -25,19 +25,24 @@
 
 				<div class="all-tags">
 					<p class="lead m-0 lh-1">Другие категории:</p>
-					<button v-if='tag.slug != tag_slug' v-for='tag in tags' class="btn btn-link" type="button">
+					<button v-if='tag.slug != tag_slug' v-for='tag in tags' class="btn btn-link mt-1" type="button">
 						<nuxt-link :to='`/categories/${tag.slug}`'><span class="badge text-bg-success">{{tag.name}}</span></nuxt-link>
 					</button>
 				</div>
+                
+                <div v-if='typeof posts == "object"'>
+                    <AllPostBlog v-if='posts.length>0' :posts='posts' :galleries='galleries' :next='next' 
+                    :previous='previous' :current_page='current_page' :total='total' 
+                    :query_params='query_params' :page='page' :sorted='sorted' 
+                    :page_size='page_size' :page_path='page_path' />
+                    <div class='mt-3' v-else>
+                        <span class='lead'>Постов с такой категорией нет</span>
+                    </div>
+                </div>
 
             </div>
         </div>
 
-
-        <AllPostBlog :posts='posts' :galleries='galleries' :next='next' 
-        :previous='previous' :current_page='current_page' :total='total' 
-        :query_params='query_params' :page='page' :sorted='sorted' 
-        :page_size='page_size' :page_path='page_path' />
     </div>
 </template>
 
@@ -58,7 +63,7 @@ export default {
             page_path: null,
             title: '',
 
-            posts: [],
+            posts: '',
             galleries: [],
             tags: [],
 

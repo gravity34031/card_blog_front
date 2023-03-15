@@ -24,7 +24,7 @@
 
 				<div class="all-tags">
 					<p class="lead m-0 lh-1">Все категории:</p>
-					<button v-for='tag in tags' class="btn btn-link" type="button">
+					<button v-for='tag in tags' class="btn btn-link mt-1" type="button">
 						<nuxt-link :to='`/categories/${tag.slug}`'><span class="badge text-bg-success">{{tag.name}}</span></nuxt-link>
 					</button>
 				</div>
