@@ -151,6 +151,7 @@
 </template>
 <!-- TAGS IS NOT REQUIRED! -->
 <script>
+import axios from 'axios';
 import {mapState} from 'vuex';
 import {required, minLength, maxLength} from 'vuelidate/lib/validators';
 import Header from '@/components/Header';
@@ -173,14 +174,14 @@ export default {
                 author: null
             },
             error: null,
+
+            //allPhotos: []
         }
     },
-    async asyncData(ctx){
-        const allPhotos = await ctx.$axios.get(`${process.env.baseUrl}/api/photo/`) 
-        return{
-            allPhotos: allPhotos.data,
-        }
-    },
+    /*  async fetch(){
+        const allPhotos = await axios.get(`${process.env.baseUrl}/api/photo/`)
+        this.allPhotos = allPhotos.data
+    }, */
     methods: {
         async addNewsBlog(){
                 let post = this.post    
@@ -225,7 +226,11 @@ export default {
                 this.$v.post.$reset()
                 this.$router.push(`/news/${response.data.slug}`)
             } catch(err){
-                this.error = err.response.data
+                try{
+                    this.error = err.response.data
+                } catch(e){
+                    this.error = 'Неизвестная ошибка. Выберите другое фото'
+                }
             }
         },
         convertPostTitleToSlug(input){

@@ -56,47 +56,59 @@ export default {
 			page: null,
             page_path: null,
             title: 'Категории',
+
+            posts: [],
+            galleries: [],
+            tags: [],
+
+            next: '',
+            previous: '',
+            current_page: '',
+            total: 0,
+
+            query_params: '',
 		}
 	},
 	watchQuery: ['sorted', 'page'],
-    async asyncData(ctx){
+    async fetch(){
         /* queryset for posts */
-		let query = ctx.route.query;
+        let route = this.$nuxt.$route
+
+		let query = route.query;
 		let sorted = (query.sorted !== undefined) ? `sorted=${query.sorted}` : '';
 		let page = (query.page !== undefined) ? `&page=${query.page}` : ''
 		let page_size = (query.page_size !== undefined) ? `&page_size=${query.page_size}` : '';
 		let query_params = '?' + sorted + (page?page:'&page=1') + page_size;
-		let path = ctx.route.path + query_params
-		//console.log(query_params)
-		//console.log(sorted)
+		let path = route.path + query_params
+
         let posts = await axios.get(`${process.env.baseUrl}/api/blog_posts/${query_params}`);
 		let galleries = await axios.get(`${process.env.baseUrl}/api/gallery/`)
         let tags = await axios.get(`${process.env.baseUrl}/api/tags`)
-		//console.log(posts.data)
+
         /* pagination */
 		let next = '?' + sorted + (posts.data.next ? '&' + posts.data.next.split('?').pop().split('&')[0] : '') + page_size
 		let previous = '?' + sorted + (posts.data.previous ? (posts.data.previous.includes('page=') ? '&' + posts.data.previous.split('?').pop().split('&')[0] : '&page=1') : '') + page_size
 		let current_page = query.page ? query.page: '1'
 		let total = Math.ceil(posts.data.count / (page_size ? page_size.split('=')[1] : 6))
 
-        let page_path = ctx.route.path
-		return {
-            posts: posts.data.results,
-			galleries: galleries.data,
-            tags: tags.data,
+        let page_path = route.path
 
-			next: next,
-			previous: previous,
-			current_page: Number(current_page),
-			total: total,
+        // return
+        this.posts = posts.data.results
+        this.galleries = galleries.data
+        this.tags = tags.data
 
-			query_params: query_params,
-			page: page,
-			sorted: sorted,
-			page_size: page_size,
+        this.next = next
+        this.previous = previous
+        this.current_page = Number(current_page)
+        this.total = total
 
-            page_path: page_path
-        }
+        this.query_params = query_params
+        this.page = page
+        this.sorted = sorted
+        this.page_size = page_size
+
+        this.page_path = page_path
     },
     computed: {
         user(){

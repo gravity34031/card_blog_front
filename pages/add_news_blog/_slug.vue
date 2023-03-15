@@ -152,6 +152,7 @@
 </template>
 <!-- TAGS IS NOT REQUIRED! -->
 <script>
+import axios from 'axios';
 import {mapState} from 'vuex';
 import {required, minLength, maxLength} from 'vuelidate/lib/validators';
 import Header from '@/components/Header';
@@ -176,15 +177,18 @@ export default {
             postImage: null,
             newsExists: true,
             error: null,
+
+            postSlug: '',
+            postImage: '',
         }
     },
-    async asyncData(ctx){
-        let postSlug = ctx.params.slug
+    async fetch(){
+        let postSlug = this.$nuxt.$route.params.slug
         try{
-            let post = await ctx.$axios.get(`${process.env.baseUrl}/api/news_posts/${postSlug}`)
+            let post = await axios.get(`${process.env.baseUrl}/api/news_posts/${postSlug}`)
 
-            return{
-                post: {
+            // return
+            this.post = {
                     h1: post.data.h1,
                     title: post.data.title,
                     slug: post.data.slug,
@@ -192,10 +196,9 @@ export default {
                     content: post.data.content,
                     author: post.data.author,
                     created_at: post.data.created_at,
-                },
-                postSlug: postSlug,
-                postImage: post.data.image
-            }
+                }
+            this.postSlug = postSlug
+            this.postImage = post.data.image
         } catch(err){
             console.log('Данной новости не существует. Создайте новую')
             return {newsExists: false}
@@ -223,7 +226,11 @@ export default {
                     this.$v.post.$reset()
                     this.$router.push(`/news/${response.data.slug}`)
                 } catch(err){
-                    this.error = err.response.data
+                    try{
+                        this.error = err.response.data
+                    } catch(e){
+                        this.error = 'Неизвестная ошибка. Выберите другое фото'
+                    }
                 }
             } else{
                 let post = this.post    

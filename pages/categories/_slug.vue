@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header :title='`${"# " + title}`' />
+        <Header :title='`${title?"# " + title:""}`' />
 
 
         <div class="container-fluid pt-4 bg-color">
@@ -56,18 +56,32 @@ export default {
 			page_size : null,
 			page: null,
             page_path: null,
+            title: '',
+
+            posts: [],
+            galleries: [],
+            tags: [],
+
+            next: '',
+            previous: '',
+            current_page: '',
+            total: 0,
+
+            query_params: '',
+            tag_slug: ''
 		}
 	},
 	watchQuery: ['sorted', 'page'],
-    async asyncData(ctx){
+    async fetch(){
+        let route = this.$nuxt.$route
         /* queryset for posts */
-        let tag_slug = ctx.route.params.slug
-		let query = ctx.route.query;
+        let tag_slug = route.params.slug
+		let query = route.query;
 		let sorted = (query.sorted !== undefined) ? `sorted=${query.sorted}` : '';
 		let page = (query.page !== undefined) ? `&page=${query.page}` : ''
 		let page_size = (query.page_size !== undefined) ? `&page_size=${query.page_size}` : '';
 		let query_params = '?' + sorted + (page?page:'&page=1') + page_size;
-		let path = ctx.route.path + query_params
+		let path = route.path + query_params
 
         let posts = await axios.get(`${process.env.baseUrl}/api/tags/${tag_slug}${query_params}`);
 		let galleries = await axios.get(`${process.env.baseUrl}/api/gallery/`)
@@ -79,33 +93,38 @@ export default {
 		let current_page = query.page ? query.page: '1'
 		let total = Math.ceil(posts.data.count / (page_size ? page_size.split('=')[1] : 6))
 
-        let page_path = ctx.route.path
-		return {
-            posts: posts.data.results,
-			galleries: galleries.data,
-            tags: tags.data,
+        let page_path = route.path
 
-			next: next,
-			previous: previous,
-			current_page: Number(current_page),
-			total: total,
 
-			query_params: query_params,
-			page: page,
-			sorted: sorted,
-			page_size: page_size,
-
-            page_path: page_path,
-            tag_slug: tag_slug,
-        }
-    },
-    created(){
-        let tags = this.tags
-        for (let tag of tags){
-            if (tag.slug == this.tag_slug){
-                this.title = tag.name
+        // title
+        let title = ''
+        if (tags.data){
+            for (let tag of tags.data){
+                if (tag.slug == tag_slug){
+                    title = tag.name
+                }
             }
         }
+
+        // return
+        this.title = title
+
+        this.posts = posts.data.results
+        this.galleries = galleries.data
+        this.tags = tags.data
+
+        this.next = next
+        this.previous = previous
+        this.current_page = Number(current_page)
+        this.total = total
+
+        this.query_params = query_params
+        this.page = page
+        this.sorted = sorted
+        this.page_size = page_size
+
+        this.page_path = page_path
+        this.tag_slug = tag_slug
     },
     computed: {
         user(){

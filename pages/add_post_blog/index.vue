@@ -348,6 +348,7 @@
 </template>
 <!-- TAGS IS NOT REQUIRED! -->
 <script>
+import axios from 'axios';
 import {mapState} from 'vuex';
 import {required, minLength, maxLength, maxValue, minValue} from 'vuelidate/lib/validators';
 import Header from '@/components/Header';
@@ -379,14 +380,14 @@ export default {
             checkedPhotos: [],
             error: null,
             errorGallery: null,
-            errorPhoto: null
+            errorPhoto: null,
+
+            allPhotos: [],
         }
     },
-    async asyncData(ctx){
-        const allPhotos = await ctx.$axios.get(`${process.env.baseUrl}/api/photo/`) 
-        return{
-            allPhotos: allPhotos.data,
-        }
+    async fetch(){
+        const allPhotos = await axios.get(`${process.env.baseUrl}/api/photo/`) 
+        this.allPhotos = allPhotos.data
     },
     methods: {
         async addPostBlog(){

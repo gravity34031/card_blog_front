@@ -35,8 +35,7 @@
                     </div>
                 </div>
 
-
-                <div class="card mt-3">
+                <div v-if='thereIsAPostAside(asideBlog, 0) && asideBlog' class="card mt-3">
                     <h5 class="card-header">Последние работы</h5>
                     <ul class="list-group list-group-flush">
                         <li v-for='post in asideBlog' v-if='post.slug!=post_blog_slug' class="list-group-item">
@@ -55,7 +54,7 @@
                 </div>
 
 
-                <div class="card mt-3">
+                <div v-if='thereIsAPostAside(asideNews, 1) && asideNews' class="card mt-3">
                     <h5 class="card-header">Последние новости</h5>
                     <ul class="list-group list-group-flush">
                         <li v-for='post in asideNews' v-if='post.slug!=news_blog_slug' class="list-group-item">
@@ -102,6 +101,15 @@ export default{
         chooseImage(images){
             const image = (function(dict, key){return (dict) ? dict[key] : ''})(this.getImages(images)[0], 'image')
             return image.split('.').slice(0, -1).join('.') + '_compressed.webp'
+        },
+        thereIsAPostAside(aside, isNews){
+            let postsCount = 0
+            for(let post of aside){
+                if(post.slug!=(isNews?this.news_blog_slug:this.post_blog_slug)){
+                    postsCount += 1
+                }
+            }
+            return postsCount
         },
     }
 }

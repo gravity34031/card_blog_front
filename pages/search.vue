@@ -16,8 +16,6 @@
             </div>
         </div>
 
-
-
         <div class="container-fluid pt-4 pb-2 bg-color">
             <div class="container ">
 
@@ -40,9 +38,12 @@
                     </div>
                 </div>
 
-
-                <span class='mt-4 lead text-break' v-if='querySearch'>По запросу: {{querySearch}}</span>
-                <span class='mt-4 lead' v-else>По запросу: Все посты</span>
+                    <span class='mt-4 lead text-break' v-if='getQuerySearch'>По запросу: {{getQuerySearch}}</span>
+                        <span class='mt-4 lead' v-else>
+                            <span v-if='count!=null&& count==0'>По запросу: - </span>
+                            <span v-else>По запросу: Все посты</span>
+                        </span>
+                <span class='mt-4 lead' v-else>По запросу: -</span>
                 <p class="lead mb-0">Найдено записей: {{count}}</p>
 
         
@@ -76,7 +77,7 @@
 
 											<div class="mb-2 all-tags">
 												<button class="btn btn-link" v-for='tag in post.tags'>
-                                                    <nuxt-link :to='`/tags/${tag.slug}`'>
+                                                    <nuxt-link :to='`/categories/${tag.slug}`'>
 													    <span class="badge text-bg-success text-wrap">{{ tag.name }}</span>
                                                     </nuxt-link>
 												</button>
@@ -121,7 +122,7 @@
 					</ul>
 				</nav>
 
-
+            
             </div>
         </div>
     </div>
@@ -135,47 +136,62 @@ export default {
     data(){
 		return{
             search: '',
-            querySearch: '',
 			page_size : null,
 			page: null,
-            page_url: '/search'
+            page_url: '/search',
+
+
+            query: '',
+
+            posts : null,
+            count : null,
+            galleries : null,
+
+            next : null,
+            previous : null,
+            current_page : null,
+            total : null,
+            query_params : '',
+
+
+
 		}
 	},
-    async asyncData(ctx){
-
-		let query = ctx.route.query;
+    mounted(){
+        let query = this.$nuxt.$route.query.search
+        this.query = query
+    },
+    async fetch(){
+		//let query = this.$nuxt.$route.query;
         
-        let search = (query.search !== undefined) ? `search=${encodeURIComponent(query.search)}` : ''
-		let page = (query.page !== undefined) ? `&page=${query.page}` : ''
-		let page_size = (query.page_size !== undefined) ? `&page_size=${query.page_size}` : '';
-		let query_params = '?' + search + (page?page:'&page=1') + page_size;
+        let query = this.query?this.query:this.$nuxt.$route.query.search
 
-
+		let page = (this.$nuxt.$route.query.page !== undefined) ? `&page=${this.$nuxt.$route.query.page}` : ''
+		let page_size = (this.$nuxt.$route.query.page_size !== undefined) ? `&page_size=${this.$nuxt.$route.query.page_size}` : '';
+		let query_params = '?search=' + query + (page?page:'&page=1') + page_size;
+        
         let posts = await axios.get(`${process.env.baseUrl}/api/blog_posts/${query_params}`);
 		let galleries = await axios.get(`${process.env.baseUrl}/api/gallery/`)
 
-
-		let next = '?' + search + (posts.data.next ? '&' + posts.data.next.split('?').pop().split('&')[0] : '') + page_size
-		let previous = '?' + search + (posts.data.previous ? (posts.data.previous.includes('page=') ? '&' + posts.data.previous.split('?').pop().split('&')[0] : '&page=1') : '') + page_size
-		let current_page = query.page ? query.page: '1'
+		let next = '?search=' + query + (posts.data.next ? '&' + posts.data.next.split('?').pop().split('&')[0] : '') + page_size
+		let previous = '?search=' + query + (posts.data.previous ? (posts.data.previous.includes('page=') ? '&' + posts.data.previous.split('?').pop().split('&')[0] : '&page=1') : '') + page_size
+		let current_page = this.$nuxt.$route.query.page ? this.$nuxt.$route.query.page: '1'
 		let total = Math.ceil(posts.data.count / (page_size ? page_size.split('=')[1] : 6))
 
-        let querySearch = (query.search !== undefined) ? `${query.search}` : ''
-		return {
-            posts: posts.data.results,
-            count: posts.data.count,
-			galleries: galleries.data,
+        //return
+        this.posts = posts.data.results
+        this.count = posts.data.count
+        this.galleries = galleries.data
 
-			next: next,
-			previous: previous,
-			current_page: Number(current_page),
-			total: total,
-			query_params: query_params,
-			page: page,
-			page_size: page_size,
+        this.next = next
+        this.previous = previous
+        this.current_page = Number(current_page)
+        this.total = total
+        this.query_params = query_params
+        this.page = page
+        this.page_size = page_size
 
-            querySearch: querySearch
-        }
+
     },
     methods:{
         ...mapActions(['likePost', 'isPostLiked']), //like post
@@ -202,8 +218,11 @@ export default {
 		},
         submit_search(){
             this.$router.push('/search?search=' + encodeURIComponent(this.search))
+            
+            let query = this.search
+            this.query = query
+            this.$nuxt.refresh()
         },
-
     },
     computed: {
 		...mapState(['postIsLiked']), //like post
@@ -213,6 +232,9 @@ export default {
 		user(){
 			return this.$auth.user
 		},
+        getQuerySearch(){
+            return this.$nuxt.$route.query.search
+        }
 	},
 }
 </script>

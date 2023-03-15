@@ -348,6 +348,7 @@
 </template>
 <!-- TAGS IS NOT REQUIRED! -->
 <script>
+import axios from 'axios';
 import {mapState} from 'vuex';
 import {required, minLength, maxLength, maxValue, minValue} from 'vuelidate/lib/validators';
 import Header from '@/components/Header';
@@ -379,43 +380,52 @@ export default {
             checkedPhotos: [],
             error: null,
             errorGallery: null,
-            errorPhoto: null
+            errorPhoto: null,
+
+
+            postSlug: '',
+            allPhotos: [],
+            getPost: [],
+
+            postGallerySlug: '',
+            postCreated_at: '',
+            postId: '',
         }
     },
-    async asyncData(ctx){
-        let postSlug = ctx.params.slug
+    async fetch(){
+        let postSlug = this.$nuxt.$route.params.slug
         try{
-            let post = await ctx.$axios.get(`${process.env.baseUrl}/api/blog_posts/${postSlug}`)
-            const gallery = await ctx.$axios.get(`${process.env.baseUrl}/api/gallery/${post.data.images}`)
+            let post = await axios.get(`${process.env.baseUrl}/api/blog_posts/${postSlug}`)
+            const gallery = await axios.get(`${process.env.baseUrl}/api/gallery/${post.data.images}`)
             let tags = []
             for(let tag of post.data.tags){
                 tags.push(tag.name)
             }
-            const allPhotos = await ctx.$axios.get(`${process.env.baseUrl}/api/photo/`)
+            const allPhotos = await axios.get(`${process.env.baseUrl}/api/photo/`)
             
-            return{
-                postSlug: postSlug,
-                allPhotos: allPhotos.data,
-                getPost: post.data,
+            // return
+            this.postSlug = postSlug
+            this.allPhotos = allPhotos.data
+            this.getPost = post.data
 
-                post: {
-                        h1: post.data.h1,
-                        title: post.data.title,
-                        slug: post.data.slug,
-                        description: post.data.description,
-                        content: post.data.content,
-                        tags: tags, //
-                        price: post.data.price,
-                        images: gallery.data.photos, //
-                        author: post.data.author
-                    },
-                checkedPhotos: gallery.data.photos,
-                postGallerySlug: post.data.images,
-                postCreated_at: post.data.created_at,
-                postId: post.data.id
+            this.post = {
+                    h1: post.data.h1,
+                    title: post.data.title,
+                    slug: post.data.slug,
+                    description: post.data.description,
+                    content: post.data.content,
+                    tags: tags, //
+                    price: post.data.price,
+                    images: gallery.data.photos, //
+                    author: post.data.author
             }
+            this.checkedPhotos = gallery.data.photos
+            this.postGallerySlug = post.data.images
+            this.postCreated_at = post.data.created_at
+            this.postId = post.data.id
         } catch(err){
-            ctx.redirect('/add_post_blog')
+            console.log(err)
+            this.$nuxt.redirect('/add_post_blog')
         }
     },
     methods: {

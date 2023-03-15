@@ -87,14 +87,13 @@ export default {
     middleware: 'isSuperUser',
     data(){
         return{
-            checkedTags: []
+            checkedTags: [],
+            tags: [],
         }
     },
-    async asyncData(ctx){
+    async fetch(){
         let response = await axios.get(`${process.env.baseUrl}/api/tags`)
-        return {
-            tags: response.data
-        }
+        this.tags = response.data
     },
     methods: {
         checkTagBase(tagSlug, isInput){

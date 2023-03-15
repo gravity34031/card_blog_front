@@ -13,24 +13,29 @@
                     </nuxt-link>
                 </div>
 
-
-                <div v-if='posts && posts.length > 0' class="container-fluid">
-                    <div class="card px-2 py-3">
-                        <ul v-for='post in posts' class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <h5 class="card-title">{{post.title}}</h5>
-                                <p class="card-text">{{post.description}}</p>
-                                <div class="d-flex justify-content-between">
-                                    <small class="align-self-end">{{transformTime(post.created_at)}}</small>
-                                    <nuxt-link :to='`/news/${post.slug}`' class="btn btn-secondary">Подробнее</nuxt-link>
-                                </div>
-                            </li>
-                        </ul>
+                <div v-if="typeof posts == 'object'">
+                    <div v-if='posts.length > 0' class="container-fluid">
+                        <div class="card px-2 py-3">
+                            <ul v-for='post in posts' class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <h5 class="card-title">{{post.title}}</h5>
+                                    <p class="card-text">{{post.description}}</p>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="align-self-end">{{transformTime(post.created_at)}}</small>
+                                        <nuxt-link :to='`/news/${post.slug}`' class="btn btn-secondary">Подробнее</nuxt-link>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <span class='lead'>Новостей нет</span>
                     </div>
                 </div>
-                <div v-else>
-                    <span class='lead'>Новостей нет</span>
+                <div v-else class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary" role="status"></div>
                 </div>
+                
 
 
             </div>
@@ -47,18 +52,13 @@ export default {
     },
     data(){
         return{
-            title: 'Новости'
+            title: 'Новости',
+            posts: '',
         }
     },
-    async asyncData(ctx){
-        try{
-            let {data} = await axios.get(`${process.env.baseUrl}/api/news_posts/`)
-            return {
-                posts: data.results,
-            }}catch(err){
-                console.log(err)
-            }
-        
+    async fetch(){
+        let {data} = await axios.get(`${process.env.baseUrl}/api/news_posts/`)
+        this.posts = data.results
     },
     methods:{
         transformTime(time){

@@ -42,9 +42,11 @@
 
 
 
-                <span class='mt-4 lead text-break' v-if='querySearch'>По запросу: {{querySearch}}</span>
-                <span class='mt-4 lead' v-else>По запросу: Все новости</span>
-                <p class="lead mb-0">Найдено записей: {{count}}</p>
+                <span class='mt-4 lead text-break' v-if='getQuerySearch'>По запросу: {{getQuerySearch}}</span>
+                    <span class='mt-4 lead' v-else>
+                        <span v-if='count!=null&& count==0'>По запросу: - </span>
+                        <span v-else>По запросу: Все новости</span>
+                    </span>
 
                 <!-- POSTS -->
                 <div v-if='posts && posts.length > 0' class="container-fluid mb-2">
@@ -75,20 +77,31 @@ export default {
     data(){
 		return{
             search: '',
-            querySearch: '',
+            
+            
+            posts: null,
+            count: null,
+            querySearch: null,
+            query: '',
 		}
 	},
-    async asyncData(ctx){
-		let query = ctx.route.query;
-        let search = (query.search !== undefined) ? `?search=${encodeURIComponent(query.search)}` : ''
-        let posts = await axios.get(`${process.env.baseUrl}/api/news_posts/${search}`);
+    mounted(){
+        let query = this.$nuxt.$route.query.search
+        this.query = query
+    },
+    async fetch(){
+		let query = this.query?this.query:this.$nuxt.$route.query.search
+
+        //let search = (query.search !== undefined) ? `?search=${encodeURIComponent(query.search)}` : ''
+
+        let query_params = '?search=' + query
+
+        let posts = await axios.get(`${process.env.baseUrl}/api/news_posts/${query_params}`);
 		
-        let querySearch = (query.search !== undefined) ? `${query.search}` : ''
-        return {
-            posts: posts.data.results,
-            count: posts.data.count,
-            querySearch: querySearch
-        }
+
+        this.posts = posts.data.results
+        this.count = posts.data.count
+
     },
     methods:{
         transformTime(time){
@@ -99,9 +112,17 @@ export default {
 		},
         submit_search(){
             this.$router.push('/search_news?search=' + this.search)
+            
+            let query = this.search
+            this.query = query
+            this.$nuxt.refresh()
         },
-
     },
+    computed:{
+        getQuerySearch(){
+            return this.$nuxt.$route.query.search
+        }
+    }
 }
 </script>
 

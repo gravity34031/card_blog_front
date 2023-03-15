@@ -89,23 +89,24 @@
                 </div>
                 <hr>
 
-                
-                <h4 class="d-flex justify-content-center align-items-center">
-                    <i class="fa-solid fa-coins me-2"></i>
-                    Цена: {{post.price}} р.
-                    
-                </h4>
-                <h6 class="d-flex justify-content-center align-items-center">
-                    <i class="fa-solid fa-key me-2"></i>
-                    Код товара: {{post.id}}
-                    
-                </h6>
+                <div v-if='typeof post == "object"'>
+                    <h4 class="d-flex justify-content-center align-items-center">
+                        <i class="fa-solid fa-coins me-2"></i>
+                        Цена: {{post.price}} р.
+                        
+                    </h4>
+                    <h6 class="d-flex justify-content-center align-items-center">
+                        <i class="fa-solid fa-key me-2"></i>
+                        Код товара: {{post.id}}
+                        
+                    </h6>
 
 
-                <hr>
-                <span style='white-space:pre-line' v-html='post.content'></span>
-                <hr>
-                <small class="d-flex justify-content-end">Опубликовано: {{ transformTime(post.created_at) }}</small>
+                    <hr>
+                    <span style='white-space:pre-line' v-html='post.content'></span>
+                    <hr>
+                    <small class="d-flex justify-content-end">Опубликовано: {{ transformTime(post.created_at) }}</small>
+                </div>
 
                 
                 <div class="mt-3 d-flex justify-content-between align-items">   
@@ -280,7 +281,7 @@
 					</div>
 				</div>
 
-                    <div class='d-flex align-items-center'>
+                    <div v-if='typeof post == "object"' class='d-flex align-items-center'>
 						<div class='me-3'>
 							<i class="fa-solid fa-eye"></i>
 							<span class=''>{{post.views}}</span>
@@ -345,10 +346,17 @@ export default {
 		  first_name: null,
 		  email: null
         },
-        error: null
+        error: null,
+
+        post: '',
+        comments: [],
+        photosForAside: [],
       }
     },
-    async asyncData({params}){
+    async fetch(){
+
+        let params = this.$nuxt.$route.params
+
 		let post_blog_slug = params.slug
 
         let post = await axios.get(`${process.env.baseUrl}/api/blog_posts/${params.slug}`)
@@ -356,18 +364,19 @@ export default {
         const photosForAside = await axios.get(`${process.env.baseUrl}/api/gallery/`)
 		post.data.images = gallery.data.photos
 
+
         let comments = await axios.post(`${process.env.baseUrl}/api/get_comments/`, {
             slug: post_blog_slug,
             post: 'blog'
         })
+        
+        this.getAside()
 
-		//console.log(comments.data)
-        return {
-            post: post.data,
-            comments: comments.data,
-			photosForAside: photosForAside.data,
-			post_blog_slug: post_blog_slug,
-        }
+        //return
+        this.post = post.data
+        this.comments = comments.data
+        this.photosForAside = photosForAside.data
+        this.post_blog_slug = post_blog_slug
     },
     methods:{
         ...mapActions(['likePost', 'getAside']), //like post
@@ -463,8 +472,8 @@ export default {
 		}
 	},
 	async mounted(){
-        await axios.get(`${process.env.baseUrl}/api/view/${this.post_blog_slug}`)
-		this.getAside()
+
+        await axios.get(`${process.env.baseUrl}/api/view/${this.$nuxt.$route.params.slug}`)
 		const carouselPostBlog = new bootstrap.Carousel('#carouselPostBlog', {
 			interval: 5000,
 		});

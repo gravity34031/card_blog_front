@@ -217,18 +217,17 @@ export default {
                 first_name: null,
 		        email: null
             },
-            error: null
+            error: null,
+            reviews: null,
+            photosForReviewList: null
         }
     },
     async fetch(){
         const reviews = await this.$axios.get(`${process.env.baseUrl}/api/review`)
         const photosForReviewList = await this.$axios.get(`${process.env.baseUrl}/api/gallery/`)
 
-        return {
-            reviews: reviews.data,
-            photosForReviewList: photosForReviewList.data
-        }
-
+        this.reviews = reviews.data
+        this.photosForReviewList = photosForReviewList.data
     },
     methods:{
         async addReview(){

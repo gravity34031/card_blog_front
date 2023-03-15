@@ -68,7 +68,7 @@
                     <hr v-if='post.image'>      
                     <span v-html='post.content'></span>
                     <hr>
-                    <small class="d-flex justify-content-end">Опубликовано: {{ transformTime(post.created_at) }}</small>
+                    <small class="d-flex justify-content-end">Опубликовано: {{ post.created_at?transformTime(post.created_at):'' }}</small>
                 </div>
 
 
@@ -102,12 +102,18 @@ export default{
     data(){
       return {
 		news_blog_slug: null,
-        imgIsLoaded: false
+        imgIsLoaded: false,
+
+        post: [],
+        comments: [],
+        photosForAside: [],
+        news_blog_slug: '',
       }
     },
-    async asyncData({params}){
-
+    async fetch(){
+        let params = this.$nuxt.$route.params
 		let news_blog_slug = params.slug
+        
 
         let post = await axios.get(`${process.env.baseUrl}/api/news_posts/${params.slug}`)
 
@@ -117,13 +123,12 @@ export default{
             slug: news_blog_slug,
             post: 'news'
         })
-		//console.log(comments.data)
-        return {
-            post: post.data,
-            comments: comments.data,
-			photosForAside: photosForAside.data,
-			news_blog_slug: news_blog_slug,
-        }
+
+        // return
+        this.post = post.data
+        this.comments = comments.data
+        this.photosForAside = photosForAside.data
+        this.news_blog_slug = news_blog_slug
     },
 	mounted(){
 		this.getAside()
