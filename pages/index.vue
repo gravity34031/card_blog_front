@@ -40,6 +40,9 @@ export default {
 		}
 	},
 	watchQuery: ['sorted', 'page'],
+    watch: {
+      '$route.query': '$fetch'   // This runs $fetch, defined below
+    },
     async fetch(){
 		/* queryset for posts */
 		let query = this.$nuxt.$route.query

@@ -94,7 +94,7 @@ export const actions = {
                 // dislike
                 try {
                     const response = await axios.delete(`${process.env.baseUrl}/api/favourite/`, {'data': dataBack});
-                    console.log(response)
+                    //console.log(response)
                 } catch (err) {
                     console.log(err.response)
                 }
@@ -105,7 +105,7 @@ export const actions = {
                 // like
                 try {
                     const response = await axios.post(`${process.env.baseUrl}/api/favourite/`, dataBack);
-                    console.log(response)
+                    //console.log(response)
                 } catch(err) {
                     console.log(err.response)
                 }

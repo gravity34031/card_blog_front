@@ -52,13 +52,10 @@
 						<div class="col" v-for='post in posts' :key='post.id'>
 								<div class="card shadow-sm h-100 ">
 										<div class="position-relative">
-												<img :src="chooseImage(post.images)" class="card-img-top" alt="...">
-												<button v-if='!(post.favourite.some(e => e.username == (user ? user.username : "")))' @click.prevent='likePost({post_slug: post.slug, refreshNuxt: refreshNuxt})' class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
-													<nuxt-picture src="/img/icons/like-disabled.png" width="30" height="30" class="position-relative like" z-index="-1" />
+												<button @click.prevent='likePost({post: post, user: user, refreshNuxt})' class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
+													<img :id='`like${post.slug}`' :src='postIsLiked(post) ? likeImg : likeDisabledImg' width="30" height="30" class="position-relative like" z-index="-1" />
 												</button>
-												<button v-else @click.prevent='likePost({post_slug: post.slug, refreshNuxt: refreshNuxt})' class="btn btn-link position-absolute top-0 end-0 p-0 me-1" data-bs-toggle="button">
-													<nuxt-picture src="/img/icons/like.png" width="30" height="30" class="position-relative like" z-index="-1" />
-												</button>
+												<img :src="chooseImage(post.images)" class="card-img-top" alt="..." />
 										</div>
 										<div class="card-body d-flex flex-column justify-content-between">
 											
@@ -133,6 +130,9 @@ import axios from 'axios';
 import {mapState, mapActions} from 'vuex'; //like post
 export default {
     watchQuery: ['page', 'search'],
+    watch: {
+        '$route.query': '$fetch'   // This runs $fetch, defined below
+    },
     data(){
 		return{
             search: '',
@@ -198,6 +198,15 @@ export default {
         refreshNuxt(){ //like post
 			this.$nuxt.refresh()
 		},
+        postIsLiked(post){
+            let flag = false
+            for (let user of post.favourite){
+                if ((this.user ? this.user.username: '') == user.username){
+                    flag = true
+                }
+            }
+            return flag
+        },
         getImages(gallery_slug){
 			for (let i of this.galleries){
 				if(i.slug == gallery_slug){
@@ -225,7 +234,7 @@ export default {
         },
     },
     computed: {
-		...mapState(['postIsLiked']), //like post
+        ...mapState(['likeImg', 'likeDisabledImg']), //like post
 		loggedIn(){
 			return this.$auth.loggedIn
 		},

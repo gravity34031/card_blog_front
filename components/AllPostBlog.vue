@@ -6,7 +6,6 @@
 
 				<h2 class="text-center mb-4">Последние работы</h2>
 
-
 				<nav class="navbar">
 					<div class="container-fluid pe-4 d-block d-sm-flex">
 						<!-- change the grid -->
@@ -192,7 +191,7 @@ export default{
 		},
 		sortPosts(query){
 			this.$router.push(`${this.page_path}?` + `sorted=${query}` + this.page + this.page_size)
-		}
+        }
     },
 	computed: {
 		...mapState(['likeImg', 'likeDisabledImg']), //like post
